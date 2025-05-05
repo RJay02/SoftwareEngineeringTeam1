@@ -17,4 +17,11 @@ public:
 	enum class States { CREATE, LOGIN, HOME, MENU };
 	States state;
 
+	string usernameInput;
+	string passwordInput;
+	string reenterPasswordInput;
+	bool typingUsername = false;
+	bool typingPassword = false;
+	bool retypingPassword = false;
+
 };
