@@ -14,7 +14,9 @@ void ofApp::setup() {
 
 	// set coordinates for buttons
 	// ofGetWidth() / 2 - 100 centering (- 100 is half othe box width)
-	menuBTN.set(ofGetWidth() / 2 - 100, 200, 200, 50);
+	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
+	usernameBTN.set(ofGetWidth() / 2 - 100, 200, 200, 50);
+	enterPasswordBTN.set(ofGetWidth() / 2 - 100, 200, 200, 50);
 	createBTN.set(ofGetWidth() / 2 - 100, 300, 200, 50);
 	loginBTN.set(ofGetWidth() / 2 - 100, 400, 200, 50);
 	homeBTN.set(ofGetWidth() / 2 - 100, 500, 200, 50);
@@ -24,19 +26,21 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofSetColor(50); // draws all of the buttons as assigned in setup
-	ofDrawRectangle(menuBTN);
-	ofDrawRectangle(createBTN);
-	ofDrawRectangle(loginBTN);
-	ofDrawRectangle(homeBTN);
-	ofSetColor(255); // drawing the text onto the buttons
-	headFont.drawString("Menu", ofGetWidth() / 2 - headFont.stringWidth("Menu") / 2, 235);
-	headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 335);
-	headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 435);
-	headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 535);
+	ofDrawRectangle(exitBTN);
+	ofSetColor(255);
+	mainFont.drawString("Exit", ofGetWidth() - 50 - mainFont.stringWidth("Exit") / 2, 50 + mainFont.getSize() / 2);
 
 	if (state == States::MENU) { // checking the state and drawing the designated text
+		ofSetColor(50); // draws all of the buttons as assigned in setup
+		ofDrawRectangle(createBTN);
+		ofDrawRectangle(loginBTN);
+		ofDrawRectangle(homeBTN);
+		ofSetColor(255); // drawing the text onto the buttons
+		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 335);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 435);
+		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 535);
 		ofSetColor(50);
-		headFont.drawString("Menu", ofGetWidth() / 2 - headFont.stringWidth("Menu") / 2, 100);
+		headFont.drawString("Password Manager", ofGetWidth() / 2 - headFont.stringWidth("Password Manager") / 2, 100);
 	}
 
 	if (state == States::CREATE) {
@@ -73,5 +77,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 	if (homeBTN.inside(x, y)) {
 		state = States::HOME;
+	}
+	if (exitBTN.inside(x, y)) {
+		ofExit();
 	}
 }

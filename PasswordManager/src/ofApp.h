@@ -10,9 +10,9 @@ public:
 	void keyPressed(int key);
 	void mousePressed(int x, int y, int button);
 
-	ofRectangle createBTN, loginBTN, homeBTN, menuBTN;
+	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN;
 
-	ofTrueTypeFont headFont, mainFont, subFont, exitBTN;
+	ofTrueTypeFont headFont, mainFont, subFont;
 
 	enum class States { CREATE, LOGIN, HOME, MENU };
 	States state;
