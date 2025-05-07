@@ -9,6 +9,8 @@ void ofApp::setup() {
 	mainFont.load("font.otf", 12);
 	subFont.load("sub.otf", 17);
 	headFont.load("header.ttf", 22);
+	backIMG.load("back.png");
+	eyeIMG.load("eye-icon.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
@@ -18,6 +20,8 @@ void ofApp::setup() {
 	createBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 400) / 2, 600, ofGetWidth() - 400, 50);
 	loginBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 300) / 2, 700, ofGetWidth() - 300, 50);
 	homeBTN.set(ofGetWidth() / 2 - 100, 400, 200, 50);
+	backBTN.set(15, 25, 50, 50);
+	hidePasswordBTN.set(enterPasswordBTN.x + enterPasswordBTN.width + 10, enterPasswordBTN.y, 50, enterPasswordBTN.height);
 }
 
 
@@ -48,6 +52,8 @@ void ofApp::draw() {
 		ofSetColor(225);
 		ofDrawRectangle(usernameBTN);
 		ofDrawRectangle(enterPasswordBTN);
+		backIMG.draw(backBTN);
+		eyeIMG.draw(hidePasswordBTN);
 
 		// make this a separate function
 		// Username text box
@@ -67,8 +73,13 @@ void ofApp::draw() {
 		}
 		else {
 			ofSetColor(0);
-			//string hiddenPassword(passwordInput.length(), '*'); // makes the inputed text appear as *
-			mainFont.drawString(passwordInput, enterPasswordBTN.x + 10, enterPasswordBTN.y + 30);
+			if (hidePasword) {
+				hiddenPassword = string(passwordInput.length(), '*');
+				mainFont.drawString(hiddenPassword, enterPasswordBTN.x + 10, enterPasswordBTN.y + 30);
+			}
+			else {
+				mainFont.drawString(passwordInput, enterPasswordBTN.x + 10, enterPasswordBTN.y + 30);
+			}
 		}
 	}
 
@@ -96,7 +107,13 @@ void ofApp::draw() {
 		}
 		else {
 			ofSetColor(0);
-			mainFont.drawString(reenterPasswordInput, reEnterPasswordBTN.x + 10, reEnterPasswordBTN.y + 30);
+			if (hidePasword) {
+				hiddenPassword = string(reenterPasswordInput.length(), '*');
+				mainFont.drawString(hiddenPassword, reEnterPasswordBTN.x + 10, reEnterPasswordBTN.y + 30);
+			}
+			else {
+				mainFont.drawString(reenterPasswordInput, reEnterPasswordBTN.x + 10, reEnterPasswordBTN.y + 30);
+			}
 		}
 	}
 
@@ -112,7 +129,7 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 		if (key == OF_KEY_BACKSPACE && usernameInput.length() > 0) {
 			usernameInput = usernameInput.substr(0, usernameInput.length() - 1); // removes the last inputted character
 		}
-		else if (key >= 32 && key <= 126) { // only allow printable characters
+		else if (key >= 32 && key <= 126 && usernameInput.length() < maxWordCount) { // only allow printable characters
 			usernameInput += (char)key;
 		}
 		// enter key goes to the next box?
@@ -121,7 +138,7 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 		if (key == OF_KEY_BACKSPACE && passwordInput.length() > 0) {
 			passwordInput = passwordInput.substr(0, passwordInput.length() - 1);
 		}
-		else if (key >= 32 && key <= 126) {
+		else if (key >= 32 && key <= 126 && passwordInput.length() < maxWordCount) {
 			passwordInput += (char)key;
 		}
 	}
@@ -129,7 +146,7 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 		if (key == OF_KEY_BACKSPACE && reenterPasswordInput.length() > 0) {
 			reenterPasswordInput = reenterPasswordInput.substr(0, reenterPasswordInput.length() - 1);
 		}
-		else if (key >= 32 && key <= 126) {
+		else if (key >= 32 && key <= 126 && reenterPasswordInput.length() < maxWordCount) {
 			reenterPasswordInput += (char)key;
 		}
 	}
@@ -140,24 +157,29 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (state == States::MENU) { // when the mouse is pressed checks to see if the coordinates match with the button
 		if (createBTN.inside(x, y)) {
 			state = States::CREATE;
+			clearInput();
 			return;
 		}
 		if (loginBTN.inside(x, y)) {
 			state = States::LOGIN;
+			clearInput();
 			return;
 		}
 		if (homeBTN.inside(x, y)) {
 			state = States::HOME;
+			clearInput();
 			return;
 		}
 	}
 	if (state == States::LOGIN) {
 		if (loginBTN.inside(x, y)) {
 			state = States::HOME;
+			clearInput();
 			return;
 		}
 		if (createBTN.inside(x, y)) {
 			state = States::CREATE;
+			clearInput();
 			return;
 		}
 	}
@@ -165,15 +187,25 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (state == States::CREATE) {
 		if (loginBTN.inside(x, y)) {
 			state = States::LOGIN;
+			clearInput();
 			return;
 		}
 		if (createBTN.inside(x, y)) {
 			state = States::HOME;
+			clearInput();
 			return;
 		}
 	}
+	
 	if (exitBTN.inside(x, y)) { // exits the solution
 		ofExit();
+	}
+	if (backBTN.inside(x, y)) {
+		state = States::MENU;
+		clearInput();
+	}
+	if (hidePasswordBTN.inside(x, y)) {
+		hidePasword = !hidePasword;
 	}
 	if (usernameBTN.inside(x, y)) { // tells the system what text box should be active
 		typingUsername = true;
@@ -195,4 +227,10 @@ void ofApp::mousePressed(int x, int y, int button) {
 		typingPassword = false;
 		retypingPassword = false;
 	}
+}
+
+void ofApp::clearInput() {
+	usernameInput.clear();
+	passwordInput.clear();
+	reenterPasswordInput.clear();
 }
