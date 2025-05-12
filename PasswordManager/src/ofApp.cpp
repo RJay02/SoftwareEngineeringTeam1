@@ -22,6 +22,8 @@ void ofApp::setup() {
 	homeBTN.set(ofGetWidth() / 2 - 100, 400, 200, 50);
 	backBTN.set(15, 25, 50, 50);
 	hidePasswordBTN.set(enterPasswordBTN.x + enterPasswordBTN.width + 10, enterPasswordBTN.y, 50, enterPasswordBTN.height);
+	searchBTN.set(200, 200, ofGetWidth() - 400, 50);
+	passwordBox.set(300, 300, ofGetWidth() - 600, 100);
 }
 
 
@@ -120,6 +122,31 @@ void ofApp::draw() {
 	if (state == States::HOME) {
 		ofSetColor(50);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
+		ofSetColor(225);
+		backIMG.draw(backBTN);
+		ofDrawRectangle(searchBTN);
+
+		if (searchInput.empty()) {
+			ofSetColor(150);
+			mainFont.drawString("Search", searchBTN.x + 10, searchBTN.y + 30);
+		}
+		else {
+			ofSetColor(0);
+			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
+		}
+		for (int i = 0; i < service.size(); i++) {
+			ofSetColor(225);
+			ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
+			ofSetColor(50);
+			mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
+			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
+			mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 30);
+			mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 80);
+			mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
+		}
+		//ofDrawRectangle(passwordBox);
+		//cout << service.size() << endl;
+
 	}
 }
 
@@ -150,6 +177,17 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 			reenterPasswordInput += (char)key;
 		}
 	}
+	else if (searching) {
+		if (key == OF_KEY_BACKSPACE && searchInput.length() > 0) {
+			searchInput = searchInput.substr(0, searchInput.length() - 1);
+		}
+		else if (key >= 32 && key <= 126 && searchInput.length() < maxWordCount) {
+			searchInput += (char)key;
+		}
+		else if (key == OF_KEY_RETURN) {
+			// add search button functionality
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -171,6 +209,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			return;
 		}
 	}
+
 	if (state == States::LOGIN) {
 		if (loginBTN.inside(x, y)) {
 			state = States::HOME;
@@ -207,25 +246,35 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (hidePasswordBTN.inside(x, y)) {
 		hidePasword = !hidePasword;
 	}
-	if (usernameBTN.inside(x, y)) { // tells the system what text box should be active
+	if (usernameBTN.inside(x, y) && (state == States::LOGIN || state == States::CREATE)) { // tells the system what text box should be active
 		typingUsername = true;
 		typingPassword = false;
 		retypingPassword = false;
+		searching = false;
 	}
-	else if (enterPasswordBTN.inside(x, y)) {
+	else if (enterPasswordBTN.inside(x, y) && (state == States::LOGIN || state == States::CREATE)) {
 		typingUsername = false;
 		typingPassword = true;
 		retypingPassword = false;
+		searching = false;
 	}
-	else if (reEnterPasswordBTN.inside(x, y)) {
+	else if (reEnterPasswordBTN.inside(x, y) && (state == States::LOGIN || state == States::CREATE)) {
 		typingUsername = false;
 		typingPassword = false;
 		retypingPassword = true;
+		searching = false;
+	}
+	else if (searchBTN.inside(x, y) && state == States::HOME) {
+		typingUsername = false;
+		typingPassword = false;
+		retypingPassword = false;
+		searching = true;
 	}
 	else {
 		typingUsername = false;
 		typingPassword = false;
 		retypingPassword = false;
+		searching = false;
 	}
 }
 
@@ -233,4 +282,5 @@ void ofApp::clearInput() {
 	usernameInput.clear();
 	passwordInput.clear();
 	reenterPasswordInput.clear();
+	searchInput.clear();
 }
