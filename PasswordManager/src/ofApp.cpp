@@ -23,7 +23,10 @@ void ofApp::setup() {
 	backBTN.set(15, 25, 50, 50);
 	hidePasswordBTN.set(enterPasswordBTN.x + enterPasswordBTN.width + 10, enterPasswordBTN.y, 50, enterPasswordBTN.height);
 	searchBTN.set(200, 200, ofGetWidth() - 400, 50);
+	clearSearchBTN.set(200, searchBTN.y - 50, 150, 40); 
 	passwordBox.set(300, 300, ofGetWidth() - 600, 100);
+
+	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwrods
 }
 
 
@@ -128,25 +131,55 @@ void ofApp::draw() {
 
 		if (searchInput.empty()) {
 			ofSetColor(150);
-			mainFont.drawString("Search", searchBTN.x + 10, searchBTN.y + 30);
+			mainFont.drawString(emptySearch, searchBTN.x + 10, searchBTN.y + 30);
 		}
 		else {
 			ofSetColor(0);
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
-		for (int i = 0; i < service.size(); i++) {
-			ofSetColor(225);
-			ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
-			ofSetColor(50);
-			mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
-			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
-			mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 30);
-			mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 80);
-			mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
-		}
-		//ofDrawRectangle(passwordBox);
-		//cout << service.size() << endl;
+		if (searchIndex != -1) { // checks whether the user has tryed to search
+			// clear search button
+			ofSetColor(200, 50, 50); 
+			ofDrawRectangle(clearSearchBTN);
+			ofSetColor(255);
+			mainFont.drawString("Clear Search", clearSearchBTN.x + 10, clearSearchBTN.y + 25);
 
+			int i = searchIndex;
+			ofSetColor(225);
+			ofDrawRectangle(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height);
+			eyeIMG.draw(passwordBox.x + 350, passwordBox.y + 55, 35, 35);
+			ofSetColor(50);
+			mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y - 20);
+			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + 30);
+			mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + 30);
+			mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + 80);
+			if (hidePasswordList[i]) {
+				hiddenPassword = string(password[i].length(), '*');
+				mainFont.drawString(hiddenPassword, passwordBox.x + 100, passwordBox.y + 80);
+			}
+			else {
+				mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + 80);
+			}
+		}
+		else { // no search applied
+			for (int i = 0; i < service.size(); i++) {
+				ofSetColor(225);
+				ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
+				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
+				ofSetColor(50);
+				mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
+				mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
+				mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 30);
+				mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 80);
+				if (hidePasswordList[i]) {
+					hiddenPassword = string(password[i].length(), '*');
+					mainFont.drawString(hiddenPassword, passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
+				}
+				else {
+					mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
+				}
+			}
+		}
 	}
 }
 
@@ -185,7 +218,7 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 			searchInput += (char)key;
 		}
 		else if (key == OF_KEY_RETURN) {
-			// add search button functionality
+			search();
 		}
 	}
 }
@@ -233,6 +266,19 @@ void ofApp::mousePressed(int x, int y, int button) {
 			state = States::HOME;
 			clearInput();
 			return;
+		}
+	}
+
+	if (state == States::HOME) {
+		for (int i = 0; i < service.size(); i++) {
+			ofRectangle eyeArea(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
+			if (eyeArea.inside(x, y)) {
+				hidePasswordList[i] = !hidePasswordList[i];
+				break;
+			}
+		}
+		if (searchIndex != -1 && clearSearchBTN.inside(x, y)) {
+			searchIndex = -1;
 		}
 	}
 	
@@ -283,4 +329,20 @@ void ofApp::clearInput() {
 	passwordInput.clear();
 	reenterPasswordInput.clear();
 	searchInput.clear();
+}
+
+void ofApp::search() {
+	for (int i = 0; i < service.size(); i++) {
+		if (searchInput == service[i]) {
+			searchIndex = i;
+			searchInput.clear();
+			emptySearch = "Search";
+			break;
+		} 
+		else if (i == service.size() - 1) { // if the user input doesn't match anything
+			searchInput.clear();
+			emptySearch = "Invalid search";
+			searchIndex = -1;
+		}
+	}
 }
