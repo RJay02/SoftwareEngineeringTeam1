@@ -12,12 +12,15 @@ public:
 	void clearInput();
 	void search();
 
-	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN;
+	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN;
 
 	ofTrueTypeFont headFont, mainFont, subFont;
 
 	enum class States { CREATE, LOGIN, HOME, MENU };
 	States state;
+
+	vector<string> masterUsername = { "ted", "jack", "zack" };
+	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
 
 	vector<string> service = {"apple", "amazon", "microsoft"}; // placeholder values
 	vector<string> username = {"sadasd", "agsfvdv", "askda" };
@@ -30,13 +33,21 @@ public:
 	string hiddenPassword;
 	string searchInput;
 	string emptySearch = "Search";
+	string newServiceInput;
+	string newUsernameInput;
+	string newPasswordInput;
 	bool typingUsername = false;
 	bool typingPassword = false;
 	bool retypingPassword = false;
 	bool hidePasword = true;
 	bool searching = false;
+	bool validLogin = false;
+	bool addingNewEntry = false;
+	bool typingService = false;
+	bool typingNewUsername = false;
+	bool typingNewPassword = false;
 	int maxWordCount = 12;
 	int searchIndex = -1; // -1 means no search applied
 
-	ofImage backIMG, eyeIMG;
+	ofImage backIMG, eyeIMG, deleteIMG, addIMG;
 };

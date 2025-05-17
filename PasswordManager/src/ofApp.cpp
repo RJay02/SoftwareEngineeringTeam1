@@ -11,6 +11,8 @@ void ofApp::setup() {
 	headFont.load("header.ttf", 22);
 	backIMG.load("back.png");
 	eyeIMG.load("eye-icon.png");
+	deleteIMG.load("delete.png");
+	addIMG.load("add.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
@@ -25,6 +27,10 @@ void ofApp::setup() {
 	searchBTN.set(200, 200, ofGetWidth() - 400, 50);
 	clearSearchBTN.set(200, searchBTN.y - 50, 150, 40); 
 	passwordBox.set(300, 300, ofGetWidth() - 600, 100);
+	serviceBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 300, ofGetWidth() - 200, 50);
+	usernameBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 400, ofGetWidth() - 200, 50);
+	passwordBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
+	cancelNewEntryBTN.set(ofGetWidth() / 2 + 150, passwordBTNNew.y + 70, 100, 40);
 
 	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwrods
 }
@@ -137,6 +143,7 @@ void ofApp::draw() {
 			ofSetColor(0);
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
+		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
 		if (searchIndex != -1) { // checks whether the user has tryed to search
 			// clear search button
 			ofSetColor(200, 50, 50); 
@@ -148,6 +155,7 @@ void ofApp::draw() {
 			ofSetColor(225);
 			ofDrawRectangle(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height);
 			eyeIMG.draw(passwordBox.x + 350, passwordBox.y + 55, 35, 35);
+			deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
 			ofSetColor(50);
 			mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y - 20);
 			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + 30);
@@ -166,6 +174,7 @@ void ofApp::draw() {
 				ofSetColor(225);
 				ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
 				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
+				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
 				ofSetColor(50);
 				mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
 				mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
@@ -178,6 +187,53 @@ void ofApp::draw() {
 				else {
 					mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
 				}
+			}
+		}
+
+		if (addingNewEntry) {
+			ofSetColor(200);
+			ofDrawRectangle(serviceBTN.x - 10, serviceBTN.y - 30, serviceBTN.width + 20, (passwordBTNNew.y + passwordBTNNew.height) - (serviceBTN.y - 30) + 10);
+			ofSetColor(180, 50, 50);  
+			ofDrawRectangle(cancelNewEntryBTN);
+			ofSetColor(255);
+			mainFont.drawString("Cancel", cancelNewEntryBTN.x + 20, cancelNewEntryBTN.y + 25);
+			ofSetColor(0);
+			ofDrawRectangle(serviceBTN);
+			ofDrawRectangle(usernameBTNNew);
+			ofDrawRectangle(passwordBTNNew);
+			ofSetColor(50);
+			mainFont.drawString("Service:", serviceBTN.x, serviceBTN.y - 10);
+			mainFont.drawString("Username:", usernameBTNNew.x, usernameBTNNew.y - 10);
+			mainFont.drawString("Password:", passwordBTNNew.x, passwordBTNNew.y - 10);
+
+			// Service Input
+			if (newServiceInput.empty()) {
+				ofSetColor(150);
+				mainFont.drawString("Enter service", serviceBTN.x + 10, serviceBTN.y + 30);
+			}
+			else {
+				ofSetColor(255);
+				mainFont.drawString(newServiceInput, serviceBTN.x + 10, serviceBTN.y + 30);
+			}
+
+			// Username Input
+			if (newUsernameInput.empty()) {
+				ofSetColor(150);
+				mainFont.drawString("Enter username", usernameBTNNew.x + 10, usernameBTNNew.y + 30);
+			}
+			else {
+				ofSetColor(255);
+				mainFont.drawString(newUsernameInput, usernameBTNNew.x + 10, usernameBTNNew.y + 30);
+			}
+
+			// Password Input
+			if (newPasswordInput.empty()) {
+				ofSetColor(150);
+				mainFont.drawString("Enter password", passwordBTNNew.x + 10, passwordBTNNew.y + 30);
+			}
+			else {
+				ofSetColor(255);
+				mainFont.drawString(newPasswordInput, passwordBTNNew.x + 10, passwordBTNNew.y + 30);
 			}
 		}
 	}
@@ -221,6 +277,35 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 			search();
 		}
 	}
+	else if (addingNewEntry) {
+		string* activeInput = nullptr;
+
+		if (typingService) activeInput = &newServiceInput;
+		else if (typingNewUsername) activeInput = &newUsernameInput;
+		else if (typingNewPassword) activeInput = &newPasswordInput;
+
+		if (activeInput != nullptr) {
+			if (key == OF_KEY_BACKSPACE && activeInput->length() > 0) {
+				*activeInput = activeInput->substr(0, activeInput->length() - 1);
+			}
+			else if (key >= 32 && key <= 126 && activeInput->length() < maxWordCount) {
+				*activeInput += (char)key;
+			}
+			else if (key == OF_KEY_RETURN && typingNewPassword) {
+				// When done entering password, add it
+				service.push_back(newServiceInput);
+				username.push_back(newUsernameInput);
+				password.push_back(newPasswordInput);
+				hidePasswordList.push_back(true);
+
+				// Reset
+				addingNewEntry = false;
+				newServiceInput.clear();
+				newUsernameInput.clear();
+				newPasswordInput.clear();
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -245,8 +330,20 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 	if (state == States::LOGIN) {
 		if (loginBTN.inside(x, y)) {
-			state = States::HOME;
-			clearInput();
+			validLogin = false;
+			for (int i = 0; i < masterUsername.size(); i++) {
+				if (usernameInput == masterUsername[i] && passwordInput == masterPassword[i]) {
+					validLogin = true;
+					break;
+				}
+			}
+			if (validLogin) {
+				state = States::HOME;
+				clearInput();
+			}
+			else {
+				clearInput(); // add feedback to the user that the input was invalid?
+			}
 			return;
 		}
 		if (createBTN.inside(x, y)) {
@@ -276,9 +373,52 @@ void ofApp::mousePressed(int x, int y, int button) {
 				hidePasswordList[i] = !hidePasswordList[i];
 				break;
 			}
+			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + i * 150 + 10, 25, 25);
+			if (deleteArea.inside(x, y)) {
+				username.erase(username.begin() + i);
+				password.erase(password.begin() + i);
+				service.erase(service.begin() + i);
+				hidePasswordList.erase(hidePasswordList.begin() + i);
+				return;
+			}
+		}
+
+		ofRectangle addArea(searchBTN.x + 650, searchBTN.y, 50, 50);
+		if (addArea.inside(x, y) && state == States::HOME) {
+			addingNewEntry = true; // new boolean flag
+			clearInput();
+			return;
 		}
 		if (searchIndex != -1 && clearSearchBTN.inside(x, y)) {
 			searchIndex = -1;
+		}
+
+		if (addingNewEntry) {
+			if (serviceBTN.inside(x, y)) {
+				typingService = true;
+				typingNewUsername = false;
+				typingNewPassword = false;
+			}
+			else if (usernameBTNNew.inside(x, y)) {
+				typingService = false;
+				typingNewUsername = true;
+				typingNewPassword = false;
+			}
+			else if (passwordBTNNew.inside(x, y)) {
+				typingService = false;
+				typingNewUsername = false;
+				typingNewPassword = true;
+			}
+			else {
+				typingService = typingNewUsername = typingNewPassword = false;
+			}
+		}
+
+		if (cancelNewEntryBTN.inside(x, y)) {
+			addingNewEntry = false;    // Exit the add new service screen
+			clearInput();              // Optionally clear inputs
+			typingService = typingNewUsername = typingNewPassword = false;
+			return;
 		}
 	}
 	
