@@ -1,13 +1,17 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
+// Setup: Initialize UI elements, fonts, and default state
+//--------------------------------------------------------------
 void ofApp::setup() {
 	state = States::MENU; // sets the initial state to menu
-	ofBackground(255);
+	ofBackground(255); // sets initial background colour
 
-	//loading font files
+	// load font files
 	mainFont.load("font.otf", 12);
 	subFont.load("sub.otf", 17);
+
+	// load image files
 	headFont.load("header.ttf", 22);
 	backIMG.load("back.png");
 	eyeIMG.load("eye-icon.png");
@@ -37,6 +41,8 @@ void ofApp::setup() {
 
 
 //--------------------------------------------------------------
+// Draw: Draw UI based on the current state
+//--------------------------------------------------------------
 void ofApp::draw() {
 	ofSetColor(50); // sets colour of following object(s)
 	ofDrawRectangle(exitBTN); // drawing a rectangle based on values set in setup
@@ -53,7 +59,7 @@ void ofApp::draw() {
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 435);
 		ofSetColor(50);
-		headFont.drawString("Password Manager", ofGetWidth() / 2 - headFont.stringWidth("Password Manager") / 2, 100);
+		headFont.drawString("LockR: Password Manager", ofGetWidth() / 2 - headFont.stringWidth("LockR: Password Manager") / 2, 100);
 	}
 
 	if (state == States::LOGIN or state == States::CREATE) { // if its either login or create screen
@@ -240,6 +246,8 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
+// keyPressed: Handles keyboard interaction
+//--------------------------------------------------------------
 void ofApp::keyPressed(int key) { // for typing into boxes 
 	if (typingUsername) { // allows input if the user clicked onto the username box
 		if (key == OF_KEY_BACKSPACE && usernameInput.length() > 0) {
@@ -308,6 +316,8 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 	}
 }
 
+//--------------------------------------------------------------
+// mousePressed: Handles Mouse interaction
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
 	if (state == States::MENU) { // when the mouse is pressed checks to see if the coordinates match with the button
@@ -464,6 +474,9 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 }
 
+//--------------------------------------------------------------
+// clearInput: Clears text inputs
+//--------------------------------------------------------------
 void ofApp::clearInput() {
 	usernameInput.clear();
 	passwordInput.clear();
@@ -471,6 +484,9 @@ void ofApp::clearInput() {
 	searchInput.clear();
 }
 
+//--------------------------------------------------------------
+// search: Searches for password entries by service name
+//--------------------------------------------------------------
 void ofApp::search() {
 	for (int i = 0; i < service.size(); i++) {
 		if (searchInput == service[i]) {

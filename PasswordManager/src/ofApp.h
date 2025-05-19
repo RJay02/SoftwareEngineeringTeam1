@@ -1,10 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
+#include <vector>
 
 class ofApp : public ofBaseApp {
 
 public:
+	// Core OF functions
 	void setup();
 	void draw();
 	void keyPressed(int key);
@@ -12,20 +14,28 @@ public:
 	void clearInput();
 	void search();
 
+	// Buttons and UI elements
 	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN;
 
+	// Fonts
 	ofTrueTypeFont headFont, mainFont, subFont;
 
+	// enum to handle program states (interface changes)
 	enum class States { CREATE, LOGIN, HOME, MENU };
 	States state;
 
+	// vectors to store account data
 	vector<string> masterUsername = { "ted", "jack", "zack" };
 	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
 
+	// vectors to store password entry data
 	vector<string> service = {"apple", "amazon", "microsoft"}; // placeholder values
 	vector<string> username = {"sadasd", "agsfvdv", "askda" };
 	vector<string> password = {"bdfsbk", "hsdbfjohb", "hsabdbf"};
 	vector<bool> hidePasswordList;
+
+	// image objects
+	ofImage backIMG, eyeIMG, deleteIMG, addIMG;
 
 	string usernameInput;
 	string passwordInput;
@@ -48,6 +58,4 @@ public:
 	bool typingNewPassword = false;
 	int maxWordCount = 12;
 	int searchIndex = -1; // -1 means no search applied
-
-	ofImage backIMG, eyeIMG, deleteIMG, addIMG;
 };
