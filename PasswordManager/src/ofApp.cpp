@@ -5,7 +5,7 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	state = States::MENU; // sets the initial state to menu
-	ofBackground(255); // sets initial background colour
+	ofBackground(18, 50, 75); // sets initial background colour
 
 	// load font files
 	mainFont.load("font.otf", 12);
@@ -36,7 +36,7 @@ void ofApp::setup() {
 	passwordBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
 	cancelNewEntryBTN.set(ofGetWidth() / 2 + 150, passwordBTNNew.y + 70, 100, 40);
 
-	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwrods
+	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwords
 }
 
 
@@ -44,21 +44,50 @@ void ofApp::setup() {
 // Draw: Draw UI based on the current state
 //--------------------------------------------------------------
 void ofApp::draw() {
-	ofSetColor(50); // sets colour of following object(s)
+	// sets gradient background colour
+	ofColor topColour(14, 82, 135);
+	ofColor bottomColour(18, 50, 75);
+	ofBackgroundGradient(topColour, bottomColour, OF_GRADIENT_LINEAR);
+
+	// Draw Exit Button
+	ofSetColor(65, 87, 103); // sets colour of following object(s)
 	ofDrawRectangle(exitBTN); // drawing a rectangle based on values set in setup
+	//Draw Exit button outline
+	ofNoFill(); // Disable fill colour (outline only)
 	ofSetColor(255);
+	ofSetLineWidth(3);
+	ofDrawRectRounded(ofGetWidth() - 75, 25, 50, 50, 20);
+	ofFill();
 	mainFont.drawString("Exit", ofGetWidth() - 50 - mainFont.stringWidth("Exit") / 2, 50 + mainFont.getSize() / 2); // drawing text on screen
 
+	// Draw Menu Screen
 	if (state == States::MENU) { // checking the state and drawing the designated objects
-		ofSetColor(50); 
+
+		// Draw Menu Buttons
+		ofSetColor(65, 87, 103);
 		ofDrawRectangle(createBTN);
 		ofDrawRectangle(loginBTN);
 		ofDrawRectangle(homeBTN);
-		ofSetColor(255); 
+
+		// Draw Menu Button Outlines
+		ofNoFill(); // Disable fill colour (outline only)
+		ofSetColor(255);   // border colour
+		ofSetLineWidth(3);  // border thickness
+		ofDrawRectRounded(ofGetWidth() / 2 - (ofGetWidth() - 400) / 2, 600, ofGetWidth() - 400, 50, 20); // Create outline
+		ofDrawRectRounded(ofGetWidth() / 2 - (ofGetWidth() - 300) / 2, 700, ofGetWidth() - 300, 50, 20); // Login outline
+		ofDrawRectRounded(ofGetWidth() / 2 - 100, 400, 200, 50, 20); // Home outline
+		ofFill();
+
+		// Draw Menu Button text
 		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 635);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 435);
-		ofSetColor(50);
+
+		// Draw LockR Title
+		ofNoFill(); 
+		ofSetColor(255); 
+		ofDrawRectRounded(250, 50, 520, 80, 20);
+		ofFill();
 		headFont.drawString("LockR: Password Manager", ofGetWidth() / 2 - headFont.stringWidth("LockR: Password Manager") / 2, 100);
 	}
 
