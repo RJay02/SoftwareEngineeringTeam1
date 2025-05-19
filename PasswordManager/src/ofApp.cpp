@@ -51,12 +51,12 @@ void ofApp::draw() {
 
 	// Draw Exit Button
 	ofSetColor(65, 87, 103); // sets colour of following object(s)
-	ofDrawRectangle(exitBTN); // drawing a rectangle based on values set in setup
+	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 20); // Draw button based on values set in setup
 	//Draw Exit button outline
 	ofNoFill(); // Disable fill colour (outline only)
 	ofSetColor(255);
 	ofSetLineWidth(3);
-	ofDrawRectRounded(ofGetWidth() - 75, 25, 50, 50, 20);
+	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 20);
 	ofFill();
 	mainFont.drawString("Exit", ofGetWidth() - 50 - mainFont.stringWidth("Exit") / 2, 50 + mainFont.getSize() / 2); // drawing text on screen
 
@@ -65,17 +65,17 @@ void ofApp::draw() {
 
 		// Draw Menu Buttons
 		ofSetColor(65, 87, 103);
-		ofDrawRectangle(createBTN);
-		ofDrawRectangle(loginBTN);
-		ofDrawRectangle(homeBTN);
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
+		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20);
 
 		// Draw Menu Button Outlines
 		ofNoFill(); // Disable fill colour (outline only)
 		ofSetColor(255);   // border colour
 		ofSetLineWidth(3);  // border thickness
-		ofDrawRectRounded(ofGetWidth() / 2 - (ofGetWidth() - 400) / 2, 600, ofGetWidth() - 400, 50, 20); // Create outline
-		ofDrawRectRounded(ofGetWidth() / 2 - (ofGetWidth() - 300) / 2, 700, ofGetWidth() - 300, 50, 20); // Login outline
-		ofDrawRectRounded(ofGetWidth() / 2 - 100, 400, 200, 50, 20); // Home outline
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20); // Create outline
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20); // Login outline
+		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20); // Home outline
 		ofFill();
 
 		// Draw Menu Button text
@@ -92,12 +92,12 @@ void ofApp::draw() {
 	}
 
 	if (state == States::LOGIN or state == States::CREATE) { // if its either login or create screen
-		ofSetColor(50);
-		ofDrawRectangle(createBTN);
-		ofDrawRectangle(loginBTN);
+		ofSetColor(65, 87, 103);
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
 		ofSetColor(225);
-		ofDrawRectangle(usernameBTN);
-		ofDrawRectangle(enterPasswordBTN);
+		ofDrawRectRounded(usernameBTN.x, usernameBTN.y, usernameBTN.width, usernameBTN.height, 20);
+		ofDrawRectRounded(enterPasswordBTN.x, enterPasswordBTN.y, enterPasswordBTN.width, enterPasswordBTN.height, 20);
 		backIMG.draw(backBTN);
 		eyeIMG.draw(hidePasswordBTN);
 
@@ -128,15 +128,19 @@ void ofApp::draw() {
 			}
 		}
 	}
-
-	if (state == States::LOGIN) {
-		ofSetColor(50);
-		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 100);
+	// Draw Login Screen
+	if (state == States::LOGIN) { 
+		// Draw Login title
 		ofSetColor(255);
-		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Dont' have an account") / 2, 635);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 100);	
+		ofNoFill();
+		ofDrawRectRounded(450, 60, 125, 60, 20);
+		ofFill();
+		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 635);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
 	}
 
+	// Draw Create Screen
 	if (state == States::CREATE) {
 		ofSetColor(50);
 		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 100);
@@ -163,6 +167,7 @@ void ofApp::draw() {
 		}
 	}
 
+	// Draw Home Screen
 	if (state == States::HOME) {
 		ofSetColor(50);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
@@ -179,7 +184,7 @@ void ofApp::draw() {
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
 		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
-		if (searchIndex != -1) { // checks whether the user has tryed to search
+		if (searchIndex != -1) { // checks whether the user has tried to search
 			// clear search button
 			ofSetColor(200, 50, 50); 
 			ofDrawRectangle(clearSearchBTN);
