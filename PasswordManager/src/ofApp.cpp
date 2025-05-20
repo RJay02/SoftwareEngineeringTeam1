@@ -30,7 +30,8 @@ void ofApp::setup() {
 	serviceBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 300, ofGetWidth() - 200, 50);
 	usernameBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 400, ofGetWidth() - 200, 50);
 	passwordBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
-	cancelNewEntryBTN.set(ofGetWidth() / 2 + 150, passwordBTNNew.y + 70, 100, 40);
+	cancelNewEntryBTN.set(ofGetWidth() / 2 + 250, passwordBTNNew.y + 70, 100, 40);
+	confirmNewEntryBTN.set(ofGetWidth() / 2 - 350, passwordBTNNew.y + 70, 100, 40);
 
 	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwrods
 }
@@ -195,8 +196,11 @@ void ofApp::draw() {
 			ofDrawRectangle(serviceBTN.x - 10, serviceBTN.y - 30, serviceBTN.width + 20, (passwordBTNNew.y + passwordBTNNew.height) - (serviceBTN.y - 30) + 10);
 			ofSetColor(180, 50, 50);  
 			ofDrawRectangle(cancelNewEntryBTN);
+			ofSetColor(50, 180, 50);
+			ofDrawRectangle(confirmNewEntryBTN);
 			ofSetColor(255);
 			mainFont.drawString("Cancel", cancelNewEntryBTN.x + 20, cancelNewEntryBTN.y + 25);
+			mainFont.drawString("Confirm", confirmNewEntryBTN.x + 20, confirmNewEntryBTN.y + 25);
 			ofSetColor(0);
 			ofDrawRectangle(serviceBTN);
 			ofDrawRectangle(usernameBTNNew);
@@ -291,7 +295,7 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 			else if (key >= 32 && key <= 126 && activeInput->length() < maxWordCount) {
 				*activeInput += (char)key;
 			}
-			else if (key == OF_KEY_RETURN && typingNewPassword) {
+			else if (key == OF_KEY_RETURN && typingNewPassword) { 
 				// When done entering password, add it
 				service.push_back(newServiceInput);
 				username.push_back(newUsernameInput);
@@ -360,6 +364,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 			return;
 		}
 		if (createBTN.inside(x, y)) {
+			masterUsername.push_back(usernameInput);
+			masterPassword.push_back(passwordInput);
 			state = States::HOME;
 			clearInput();
 			return;
@@ -416,9 +422,22 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 		if (cancelNewEntryBTN.inside(x, y)) {
 			addingNewEntry = false;    // Exit the add new service screen
-			clearInput();              // Optionally clear inputs
+			newServiceInput.clear();   // Optionally clear inputs
+			newUsernameInput.clear();
+			newPasswordInput.clear();
 			typingService = typingNewUsername = typingNewPassword = false;
 			return;
+		}
+		if (confirmNewEntryBTN.inside(x, y)) {
+			service.push_back(newServiceInput);
+			username.push_back(newUsernameInput);
+			password.push_back(newPasswordInput);
+			hidePasswordList.push_back(true);
+			addingNewEntry = false;   
+			newServiceInput.clear();
+			newUsernameInput.clear();
+			newPasswordInput.clear();
+			typingService = typingNewUsername = typingNewPassword = false;
 		}
 	}
 	

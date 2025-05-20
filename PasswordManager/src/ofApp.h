@@ -12,7 +12,7 @@ public:
 	void clearInput();
 	void search();
 
-	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN;
+	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN;
 
 	ofTrueTypeFont headFont, mainFont, subFont;
 
@@ -22,9 +22,9 @@ public:
 	vector<string> masterUsername = { "ted", "jack", "zack" };
 	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
 
-	vector<string> service = {"apple", "amazon", "microsoft"}; // placeholder values
-	vector<string> username = {"sadasd", "agsfvdv", "askda" };
-	vector<string> password = {"bdfsbk", "hsdbfjohb", "hsabdbf"};
+	vector<string> service = {"apple"}; // placeholder values
+	vector<string> username = {"sadasd"};
+	vector<string> password = {"bdfsbk"};
 	vector<bool> hidePasswordList;
 
 	string usernameInput;
