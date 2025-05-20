@@ -1,13 +1,17 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
+// Setup: Initialize UI elements, fonts, and default state
+//--------------------------------------------------------------
 void ofApp::setup() {
 	state = States::MENU; // sets the initial state to menu
-	ofBackground(255);
+	ofBackground(18, 50, 75); // sets initial background colour
 
-	//loading font files
+	// load font files
 	mainFont.load("font.otf", 12);
 	subFont.load("sub.otf", 17);
+
+	// load image files
 	headFont.load("header.ttf", 22);
 	backIMG.load("back.png");
 	eyeIMG.load("eye-icon.png");
@@ -33,37 +37,68 @@ void ofApp::setup() {
 	cancelNewEntryBTN.set(ofGetWidth() / 2 + 250, passwordBTNNew.y + 70, 100, 40);
 	confirmNewEntryBTN.set(ofGetWidth() / 2 - 350, passwordBTNNew.y + 70, 100, 40);
 
-	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwrods
+	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwords
 }
 
 
 //--------------------------------------------------------------
+// Draw: Draw UI based on the current state
+//--------------------------------------------------------------
 void ofApp::draw() {
-	ofSetColor(50); // sets colour of following object(s)
-	ofDrawRectangle(exitBTN); // drawing a rectangle based on values set in setup
+	// sets gradient background colour
+	ofColor topColour(14, 82, 135);
+	ofColor bottomColour(18, 50, 75);
+	ofBackgroundGradient(topColour, bottomColour, OF_GRADIENT_LINEAR);
+
+	// Draw Exit Button
+	ofSetColor(65, 87, 103); // sets colour of following object(s)
+	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 20); // Draw button based on values set in setup
+	//Draw Exit button outline
+	ofNoFill(); // Disable fill colour (outline only)
 	ofSetColor(255);
+	ofSetLineWidth(3);
+	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 20);
+	ofFill();
 	mainFont.drawString("Exit", ofGetWidth() - 50 - mainFont.stringWidth("Exit") / 2, 50 + mainFont.getSize() / 2); // drawing text on screen
 
+	// Draw Menu Screen
 	if (state == States::MENU) { // checking the state and drawing the designated objects
-		ofSetColor(50); 
-		ofDrawRectangle(createBTN);
-		ofDrawRectangle(loginBTN);
-		ofDrawRectangle(homeBTN);
-		ofSetColor(255); 
+
+		// Draw Menu Buttons
+		ofSetColor(65, 87, 103);
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
+		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20);
+
+		// Draw Menu Button Outlines
+		ofNoFill(); // Disable fill colour (outline only)
+		ofSetColor(255);   // border colour
+		ofSetLineWidth(3);  // border thickness
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20); // Create outline
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20); // Login outline
+		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20); // Home outline
+		ofFill();
+
+		// Draw Menu Button text
 		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 635);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 435);
-		ofSetColor(50);
-		headFont.drawString("Password Manager", ofGetWidth() / 2 - headFont.stringWidth("Password Manager") / 2, 100);
+
+		// Draw LockR Title
+		ofNoFill(); 
+		ofSetColor(255); 
+		ofDrawRectRounded(250, 50, 520, 80, 20);
+		ofFill();
+		headFont.drawString("LockR: Password Manager", ofGetWidth() / 2 - headFont.stringWidth("LockR: Password Manager") / 2, 100);
 	}
 
 	if (state == States::LOGIN or state == States::CREATE) { // if its either login or create screen
-		ofSetColor(50);
-		ofDrawRectangle(createBTN);
-		ofDrawRectangle(loginBTN);
+		ofSetColor(65, 87, 103);
+		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
+		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
 		ofSetColor(225);
-		ofDrawRectangle(usernameBTN);
-		ofDrawRectangle(enterPasswordBTN);
+		ofDrawRectRounded(usernameBTN.x, usernameBTN.y, usernameBTN.width, usernameBTN.height, 20);
+		ofDrawRectRounded(enterPasswordBTN.x, enterPasswordBTN.y, enterPasswordBTN.width, enterPasswordBTN.height, 20);
 		backIMG.draw(backBTN);
 		eyeIMG.draw(hidePasswordBTN);
 
@@ -94,15 +129,19 @@ void ofApp::draw() {
 			}
 		}
 	}
-
-	if (state == States::LOGIN) {
-		ofSetColor(50);
-		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 100);
+	// Draw Login Screen
+	if (state == States::LOGIN) { 
+		// Draw Login title
 		ofSetColor(255);
-		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Dont' have an account") / 2, 635);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 100);	
+		ofNoFill();
+		ofDrawRectRounded(450, 60, 125, 60, 20);
+		ofFill();
+		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 635);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
 	}
 
+	// Draw Create Screen
 	if (state == States::CREATE) {
 		ofSetColor(50);
 		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 100);
@@ -129,6 +168,7 @@ void ofApp::draw() {
 		}
 	}
 
+	// Draw Home Screen
 	if (state == States::HOME) {
 		ofSetColor(50);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
@@ -145,7 +185,7 @@ void ofApp::draw() {
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
 		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
-		if (searchIndex != -1) { // checks whether the user has tryed to search
+		if (searchIndex != -1) { // checks whether the user has tried to search
 			// clear search button
 			ofSetColor(200, 50, 50); 
 			ofDrawRectangle(clearSearchBTN);
@@ -244,6 +284,8 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
+// keyPressed: Handles keyboard interaction
+//--------------------------------------------------------------
 void ofApp::keyPressed(int key) { // for typing into boxes 
 	if (typingUsername) { // allows input if the user clicked onto the username box
 		if (key == OF_KEY_BACKSPACE && usernameInput.length() > 0) {
@@ -312,6 +354,8 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 	}
 }
 
+//--------------------------------------------------------------
+// mousePressed: Handles Mouse interaction
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
 	if (state == States::MENU) { // when the mouse is pressed checks to see if the coordinates match with the button
@@ -483,6 +527,9 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 }
 
+//--------------------------------------------------------------
+// clearInput: Clears text inputs
+//--------------------------------------------------------------
 void ofApp::clearInput() {
 	usernameInput.clear();
 	passwordInput.clear();
@@ -490,6 +537,9 @@ void ofApp::clearInput() {
 	searchInput.clear();
 }
 
+//--------------------------------------------------------------
+// search: Searches for password entries by service name
+//--------------------------------------------------------------
 void ofApp::search() {
 	for (int i = 0; i < service.size(); i++) {
 		if (searchInput == service[i]) {
