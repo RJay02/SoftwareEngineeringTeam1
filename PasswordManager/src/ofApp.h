@@ -28,6 +28,7 @@ public:
 	vector<string> masterUsername = { "ted", "jack", "zack" };
 	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
 
+	// vectors to store password entry data
 	vector<string> service = {"apple"}; // placeholder values
 	vector<string> username = {"sadasd"};
 	vector<string> password = {"bdfsbk"};
