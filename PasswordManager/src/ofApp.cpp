@@ -367,7 +367,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			return;
 		}
 		if (homeBTN.inside(x, y)) { // only temporary needs to be deleted before release
-			currentUser = "jack";
+			currentUser = "ted";
 			state = States::HOME;
 			clearInput();
 			return;
@@ -419,21 +419,28 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 
 	if (state == States::HOME) {
+
+		int displayCount = 0;
 		for (int i = 0; i < service.size(); i++) {
-			ofRectangle eyeArea(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
-			if (eyeArea.inside(x, y)) {
-				hidePasswordList[i] = !hidePasswordList[i];
-				break;
-			}
-			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + i * 150 + 10, 25, 25);
+			if (user[i] != currentUser) continue;
+
+			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + displayCount * 150 + 10, 25, 25);
 			if (deleteArea.inside(x, y)) {
-				user.erase(username.begin() + i);
+				// Erase at the correct vector index i, not displayCount!
+				user.erase(user.begin() + i);
 				username.erase(username.begin() + i);
 				password.erase(password.begin() + i);
 				service.erase(service.begin() + i);
 				hidePasswordList.erase(hidePasswordList.begin() + i);
-				return;
+				break; // exit after deleting
 			}
+			ofRectangle eyeArea(passwordBox.x + 350, passwordBox.y + displayCount * 150 + 55, 35, 35);
+			if (eyeArea.inside(x, y)) {
+				hidePasswordList[i] = !hidePasswordList[i];
+				break;
+			}
+
+			displayCount++;
 		}
 
 		ofRectangle addArea(searchBTN.x + 650, searchBTN.y, 50, 50);
