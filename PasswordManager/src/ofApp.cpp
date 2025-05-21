@@ -170,9 +170,9 @@ void ofApp::draw() {
 
 	// Draw Home Screen
 	if (state == States::HOME) {
-		ofSetColor(50);
-		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
 		ofSetColor(225);
+		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
+		subFont.drawString(currentUser, ofGetWidth() / 2 - subFont.stringWidth(currentUser) / 2, 150);
 		backIMG.draw(backBTN);
 		ofDrawRectangle(searchBTN);
 
@@ -185,7 +185,7 @@ void ofApp::draw() {
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
 		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
-		if (searchIndex != -1) { // checks whether the user has tried to search
+		if (searchIndex != -1 && user[searchIndex] == currentUser) { // checks whether the user has tried to search and if search matches the current user
 			// clear search button
 			ofSetColor(200, 50, 50); 
 			ofDrawRectangle(clearSearchBTN);
@@ -198,7 +198,7 @@ void ofApp::draw() {
 			eyeIMG.draw(passwordBox.x + 350, passwordBox.y + 55, 35, 35);
 			deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
 			ofSetColor(225);
-			subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
+			subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y - 20);  // fixed position
 			ofSetColor(50);
 			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + 30);
 			mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + 30);
@@ -211,25 +211,33 @@ void ofApp::draw() {
 				mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + 80);
 			}
 		}
-		else { // no search applied
+		// no search applied
+		else { 
+			int displayCount = 0;
 			for (int i = 0; i < service.size(); i++) {
+				if (user[i] != currentUser) continue;
+
 				ofSetColor(225);
-				ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
-				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
-				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + i * 150 + 10, 25, 25);
+				ofDrawRectangle(passwordBox.x, passwordBox.y + displayCount * 150, passwordBox.width, passwordBox.height);
+				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + displayCount * 150 + 55, 35, 35);
+				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + displayCount * 150 + 10, 25, 25);
+
 				ofSetColor(225);
-				subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
+				subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (displayCount * 150) - 20);
 				ofSetColor(50);
-				mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
-				mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 30);
-				mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 80);
+				mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (displayCount * 150) + 30);
+				mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (displayCount * 150) + 30);
+				mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (displayCount * 150) + 80);
+
 				if (hidePasswordList[i]) {
 					hiddenPassword = string(password[i].length(), '*');
-					mainFont.drawString(hiddenPassword, passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
+					mainFont.drawString(hiddenPassword, passwordBox.x + 100, passwordBox.y + (displayCount * 150) + 80);
 				}
 				else {
-					mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 80);
+					mainFont.drawString(password[i], passwordBox.x + 100, passwordBox.y + (displayCount * 150) + 80);
 				}
+
+				displayCount++;
 			}
 		}
 
@@ -339,19 +347,6 @@ void ofApp::keyPressed(int key) { // for typing into boxes
 			else if (key >= 32 && key <= 126 && activeInput->length() < maxWordCount) {
 				*activeInput += (char)key;
 			}
-			else if (key == OF_KEY_RETURN && typingNewPassword) { 
-				// When done entering password, add it
-				service.push_back(newServiceInput);
-				username.push_back(newUsernameInput);
-				password.push_back(newPasswordInput);
-				hidePasswordList.push_back(true);
-
-				// Reset
-				addingNewEntry = false;
-				newServiceInput.clear();
-				newUsernameInput.clear();
-				newPasswordInput.clear();
-			}
 		}
 	}
 }
@@ -371,7 +366,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 			clearInput();
 			return;
 		}
-		if (homeBTN.inside(x, y)) {
+		if (homeBTN.inside(x, y)) { // only temporary needs to be deleted before release
+			currentUser = "jack";
 			state = States::HOME;
 			clearInput();
 			return;
@@ -388,6 +384,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 				}
 			}
 			if (validLogin) {
+				currentUser = usernameInput;
 				state = States::HOME;
 				clearInput();
 			}
@@ -413,6 +410,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			if (passwordInput == reenterPasswordInput) {
 				masterUsername.push_back(usernameInput);
 				masterPassword.push_back(passwordInput);
+				currentUser = usernameInput;
 				state = States::HOME;
 			}
 			clearInput();
@@ -429,6 +427,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			}
 			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + i * 150 + 10, 25, 25);
 			if (deleteArea.inside(x, y)) {
+				user.erase(username.begin() + i);
 				username.erase(username.begin() + i);
 				password.erase(password.begin() + i);
 				service.erase(service.begin() + i);
@@ -468,7 +467,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			}
 		}
 
-		if (cancelNewEntryBTN.inside(x, y)) {
+		if (addingNewEntry && cancelNewEntryBTN.inside(x, y)) {
 			addingNewEntry = false;    // Exit the add new service screen
 			newServiceInput.clear();   // Optionally clear inputs
 			newUsernameInput.clear();
@@ -476,7 +475,14 @@ void ofApp::mousePressed(int x, int y, int button) {
 			typingService = typingNewUsername = typingNewPassword = false;
 			return;
 		}
-		if (confirmNewEntryBTN.inside(x, y)) {
+		if (addingNewEntry && confirmNewEntryBTN.inside(x, y)) {
+			for (int i = 0; i < service.size(); ++i) {
+				if (user[i] == currentUser && service[i] == newServiceInput) {
+					newServiceInput = "Service already exists";
+					return; // Duplicate found, do nothing
+				}
+			}
+			user.push_back(currentUser);
 			service.push_back(newServiceInput);
 			username.push_back(newUsernameInput);
 			password.push_back(newPasswordInput);
@@ -493,6 +499,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 		ofExit();
 	}
 	if (backBTN.inside(x, y)) {
+		currentUser.clear();
 		state = States::MENU;
 		clearInput();
 	}
@@ -545,17 +552,16 @@ void ofApp::clearInput() {
 // search: Searches for password entries by service name
 //--------------------------------------------------------------
 void ofApp::search() {
+	searchIndex = -1;  // Default to not found
+	emptySearch = "Invalid search";
+
 	for (int i = 0; i < service.size(); i++) {
-		if (searchInput == service[i]) {
+		if (searchInput == service[i] && user[i] == currentUser) {
 			searchIndex = i;
-			searchInput.clear();
 			emptySearch = "Search";
-			break;
-		} 
-		else if (i == service.size() - 1) { // if the user input doesn't match anything
-			searchInput.clear();
-			emptySearch = "Invalid search";
-			searchIndex = -1;
+			break;  // Valid match found, stop loop
 		}
 	}
+
+	searchInput.clear();  // Clear search either way
 }

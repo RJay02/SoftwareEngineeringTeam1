@@ -29,9 +29,10 @@ public:
 	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
 
 	// vectors to store password entry data
-	vector<string> service = {"apple"}; // placeholder values
-	vector<string> username = {"sadasd"};
-	vector<string> password = {"bdfsbk"};
+	vector<string> user = { "ted", "jack", "jack"};
+	vector<string> service = {"apple", "apple", "amazon"};
+	vector<string> username = {"sadasd", "sadhbgaj", "tuwvr"};
+	vector<string> password = {"bdfsbk", "asdabsdbk", "ugsdb"};
 	vector<bool> hidePasswordList;
 
 	// image objects
@@ -46,6 +47,7 @@ public:
 	string newServiceInput;
 	string newUsernameInput;
 	string newPasswordInput;
+	string currentUser;
 	bool typingUsername = false;
 	bool typingPassword = false;
 	bool retypingPassword = false;
