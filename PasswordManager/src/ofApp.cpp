@@ -216,7 +216,7 @@ void ofApp::draw() {
 				ofSetColor(225);
 				ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
 				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
-				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
+				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + i * 150 + 10, 25, 25);
 				ofSetColor(225);
 				subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
 				ofSetColor(50);
