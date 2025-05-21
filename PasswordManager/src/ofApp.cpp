@@ -197,8 +197,9 @@ void ofApp::draw() {
 			ofDrawRectangle(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height);
 			eyeIMG.draw(passwordBox.x + 350, passwordBox.y + 55, 35, 35);
 			deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
+			ofSetColor(225);
+			subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
 			ofSetColor(50);
-			mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y - 20);
 			mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + 30);
 			mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + 30);
 			mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + 80);
@@ -216,8 +217,9 @@ void ofApp::draw() {
 				ofDrawRectangle(passwordBox.x, passwordBox.y + i * 150, passwordBox.width, passwordBox.height);
 				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + i * 150 + 55, 35, 35);
 				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
+				ofSetColor(225);
+				subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
 				ofSetColor(50);
-				mainFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (i * 150) - 20);
 				mainFont.drawString("Username: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 30);
 				mainFont.drawString(username[i], passwordBox.x + 100, passwordBox.y + (i * 150) + 30);
 				mainFont.drawString("password: ", passwordBox.x + 10, passwordBox.y + (i * 150) + 80);
@@ -408,9 +410,11 @@ void ofApp::mousePressed(int x, int y, int button) {
 			return;
 		}
 		if (createBTN.inside(x, y)) {
-			masterUsername.push_back(usernameInput);
-			masterPassword.push_back(passwordInput);
-			state = States::HOME;
+			if (passwordInput == reenterPasswordInput) {
+				masterUsername.push_back(usernameInput);
+				masterPassword.push_back(passwordInput);
+				state = States::HOME;
+			}
 			clearInput();
 			return;
 		}
