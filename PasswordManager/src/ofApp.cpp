@@ -38,6 +38,10 @@ void ofApp::setup() {
 	confirmNewEntryBTN.set(ofGetWidth() / 2 - 350, passwordBTNNew.y + 70, 100, 40);
 
 	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwords
+
+	confirmDeleteYesBTN.set(200, 500, 100, 40); // Confirm button
+	confirmDeleteNoBTN.set(350, 500, 100, 40);  // Cancel button
+
 }
 
 
@@ -151,6 +155,10 @@ void ofApp::draw() {
 		ofSetColor(225);
 		ofDrawRectangle(reEnterPasswordBTN);
 
+		if (!createAccountErrorMsg.empty()) {
+			ofSetColor(255, 0, 0); // red for error
+			mainFont.drawString(createAccountErrorMsg, ofGetWidth() / 2 - mainFont.stringWidth(createAccountErrorMsg) / 2, 580);
+		}
 
 		if (reenterPasswordInput.empty()) {
 			ofSetColor(150);
@@ -290,6 +298,40 @@ void ofApp::draw() {
 				mainFont.drawString(newPasswordInput, passwordBTNNew.x + 10, passwordBTNNew.y + 30);
 			}
 		}
+		if (showingDeleteConfirmation) {
+			ofSetColor(0, 0, 0, 150); // semi-transparent dark overlay
+			ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+
+			ofSetColor(255);
+			int boxWidth = 400;
+			int boxHeight = 150;
+			int boxX = (ofGetWidth() - boxWidth) / 2;
+			int boxY = (ofGetHeight() - boxHeight) / 2;
+
+			ofSetColor(255);
+			ofDrawRectangle(boxX, boxY, boxWidth, boxHeight);
+
+			// Confirmation message text
+			ofSetColor(0);
+			mainFont.drawString("Are you sure you want to delete this entry?", boxX + 20, boxY + 50);
+
+			// Buttons (repositioned relative to the box)
+			confirmDeleteYesBTN.set(boxX + 50, boxY + 90, 100, 40);
+			confirmDeleteNoBTN.set(boxX + 250, boxY + 90, 100, 40);
+
+			// Draw Yes button
+			ofSetColor(200, 50, 50);
+			ofDrawRectangle(confirmDeleteYesBTN);
+			ofSetColor(255);
+			mainFont.drawString("Yes", confirmDeleteYesBTN.x + 30, confirmDeleteYesBTN.y + 25);
+
+			// Draw No button
+			ofSetColor(50, 180, 50);
+			ofDrawRectangle(confirmDeleteNoBTN);
+			ofSetColor(255);
+			mainFont.drawString("No", confirmDeleteNoBTN.x + 35, confirmDeleteNoBTN.y + 25);
+		}
+
 	}
 }
 
@@ -407,14 +449,24 @@ void ofApp::mousePressed(int x, int y, int button) {
 			return;
 		}
 		if (createBTN.inside(x, y)) {
-			if (passwordInput == reenterPasswordInput) {
-				masterUsername.push_back(usernameInput);
-				masterPassword.push_back(passwordInput);
-				currentUser = usernameInput;
-				state = States::HOME;
+			if (passwordInput != reenterPasswordInput) {
+				createAccountErrorMsg = "Passwords do not match.";
 			}
-			clearInput();
-			return;
+			else {
+				string passwordValidationResult = isValidPassword(passwordInput);
+				if (!passwordValidationResult.empty()) {
+					createAccountErrorMsg = passwordValidationResult;
+				}
+				else {
+					masterUsername.push_back(usernameInput);
+					masterPassword.push_back(passwordInput);
+					currentUser = usernameInput;
+					state = States::HOME;
+					createAccountErrorMsg.clear();
+					clearInput();
+					return;
+				}
+			}
 		}
 	}
 
@@ -426,13 +478,28 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + displayCount * 150 + 10, 25, 25);
 			if (deleteArea.inside(x, y)) {
-				// Erase at the correct vector index i, not displayCount!
-				user.erase(user.begin() + i);
-				username.erase(username.begin() + i);
-				password.erase(password.begin() + i);
-				service.erase(service.begin() + i);
-				hidePasswordList.erase(hidePasswordList.begin() + i);
-				break; // exit after deleting
+				showingDeleteConfirmation = true;
+				deleteCandidateIndex = i;
+				return;
+			}
+			if (showingDeleteConfirmation) {
+				if (confirmDeleteYesBTN.inside(x, y)) {
+					if (deleteCandidateIndex != -1) {
+						user.erase(user.begin() + deleteCandidateIndex);
+						username.erase(username.begin() + deleteCandidateIndex);
+						password.erase(password.begin() + deleteCandidateIndex);
+						service.erase(service.begin() + deleteCandidateIndex);
+						hidePasswordList.erase(hidePasswordList.begin() + deleteCandidateIndex);
+					}
+					showingDeleteConfirmation = false;
+					deleteCandidateIndex = -1;
+					return;
+				}
+				if (confirmDeleteNoBTN.inside(x, y)) {
+					showingDeleteConfirmation = false;
+					deleteCandidateIndex = -1;
+					return;
+				}
 			}
 			ofRectangle eyeArea(passwordBox.x + 350, passwordBox.y + displayCount * 150 + 55, 35, 35);
 			if (eyeArea.inside(x, y)) {
@@ -572,3 +639,24 @@ void ofApp::search() {
 
 	searchInput.clear();  // Clear search either way
 }
+//--------------------------------------------------------------
+
+// isValidPassword: Validates the password based on length and character requirements
+string ofApp::isValidPassword(const string& password) {
+	if (password.length() < 6) return "Password is too short (min 6 characters).";
+	if (password.length() > 12) return "Password is too long (max 12 characters).";
+
+	bool hasUpper = false;
+	bool hasDigit = false;
+
+	for (char c : password) {
+		if (isupper(c)) hasUpper = true;
+		if (isdigit(c)) hasDigit = true;
+	}
+
+	if (!hasUpper) return "Password must include at least one uppercase letter.";
+	if (!hasDigit) return "Password must include at least one number.";
+
+	return ""; // Empty string means it's valid
+}
+

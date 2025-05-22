@@ -25,14 +25,14 @@ public:
 	States state;
 
 	// vectors to store account data
-	vector<string> masterUsername = { "ted", "jack", "zack" };
-	vector<string> masterPassword = { "det", "kcaj", "kcaz" };
+	vector<string> masterUsername = { "ted", "jack", "zack", "rj"};
+	vector<string> masterPassword = { "det", "kcaj", "kcaz", "yippee"};
 
 	// vectors to store password entry data
-	vector<string> user = { "ted", "jack", "jack"};
-	vector<string> service = {"apple", "apple", "amazon"};
-	vector<string> username = {"sadasd", "sadhbgaj", "tuwvr"};
-	vector<string> password = {"bdfsbk", "asdabsdbk", "ugsdb"};
+	vector<string> user = { "ted", "jack", "jack", "rj"};
+	vector<string> service = {"apple", "apple", "amazon", "netflix"};
+	vector<string> username = {"sadasd", "sadhbgaj", "tuwvr", "comp21"};
+	vector<string> password = {"bdfsbk", "asdabsdbk", "ugsdb", "nooooo"};
 	vector<bool> hidePasswordList;
 
 	// image objects
@@ -60,4 +60,15 @@ public:
 	bool typingNewPassword = false;
 	int maxWordCount = 12;
 	int searchIndex = -1; // -1 means no search applied
+
+	// Function to check if the password is valid
+	string isValidPassword(const string& password);
+	string createAccountErrorMsg;
+
+
+	bool showingDeleteConfirmation = false;
+	int deleteCandidateIndex = -1; // stores index of password to delete
+
+	ofRectangle confirmDeleteYesBTN;
+	ofRectangle confirmDeleteNoBTN;
 };
