@@ -14,6 +14,7 @@ public:
 	void clearInput();
 	void search();
 	void readPasswords();
+	void readUsers();
 
 	// Buttons and UI elements
 	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN;
@@ -26,8 +27,8 @@ public:
 	States state;
 
 	// vectors to store account data
-	vector<string> masterUsername = { "ted", "jack", "zack", "rj"};
-	vector<string> masterPassword = { "det", "kcaj", "kcaz", "yippee"};
+	vector<string> masterUsername = {};
+	vector<string> masterPassword = {};
 
 	// vectors to store password entry data
 	vector<string> user = {};

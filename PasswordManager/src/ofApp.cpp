@@ -41,7 +41,7 @@ void ofApp::setup() {
 
 	confirmDeleteYesBTN.set(200, 500, 100, 40); // Confirm button
 	confirmDeleteNoBTN.set(350, 500, 100, 40);  // Cancel button
-
+	readUsers(); //fetches all the accounts
 }
 
 
@@ -463,6 +463,14 @@ void ofApp::mousePressed(int x, int y, int button) {
 					masterUsername.push_back(usernameInput);
 					masterPassword.push_back(passwordInput);
 					currentUser = usernameInput;
+					ofstream outUsersFile("Users.csv", ios::app);
+					if (outUsersFile.is_open()) {
+						outUsersFile << usernameInput << "," << passwordInput << '\n';
+						outUsersFile.close();
+					}
+					else {
+						cout << "Error: failed to access users file." << endl;
+					}
 					state = States::HOME;
 					readPasswords();
 					createAccountErrorMsg.clear();
@@ -708,5 +716,27 @@ void ofApp::readPasswords() {
 	}
 	else {
 		cout << "Error: failed to access password file." << endl;
+	}
+};
+
+//--------------------------------------------------------------
+// readUsers: Reads from the users file 
+//--------------------------------------------------------------
+void ofApp::readUsers() {
+	masterUsername.clear();			
+	masterPassword.clear();
+	ifstream inPasswordFile("Users.csv");
+	if (inPasswordFile.is_open()) {
+		string line, readMUsername, readMPassword;
+		while (getline(inPasswordFile, line)) {
+			stringstream stream(line);
+			getline(stream, readMUsername, ',');
+			masterUsername.push_back(readMUsername);
+			getline(stream, readMPassword, ',');
+			masterPassword.push_back(readMPassword);
+		}
+	}
+	else {
+		cout << "Error: failed to access users file." << endl;
 	}
 };
