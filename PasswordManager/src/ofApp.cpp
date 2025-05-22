@@ -17,6 +17,8 @@ void ofApp::setup() {
 	eyeIMG.load("eye-icon.png");
 	deleteIMG.load("delete.png");
 	addIMG.load("add.png");
+	upIMG.load("up.png");
+	downIMG.load("down.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
@@ -36,6 +38,8 @@ void ofApp::setup() {
 	passwordBTNNew.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
 	cancelNewEntryBTN.set(ofGetWidth() / 2 + 250, passwordBTNNew.y + 70, 100, 40);
 	confirmNewEntryBTN.set(ofGetWidth() / 2 - 350, passwordBTNNew.y + 70, 100, 40);
+	scrollUpBTN.set(ofGetWidth() - 170, ofGetHeight() / 2 - 50, 120, 50);
+	scrollDownBTN.set(ofGetWidth() - 170, ofGetHeight() / 2 + 50, 120, 50);
 
 	hidePasswordList = vector<bool>(password.size(), true); // initially hide all passwords
 
@@ -178,11 +182,14 @@ void ofApp::draw() {
 
 	// Draw Home Screen
 	if (state == States::HOME) {
+
 		ofSetColor(225);
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
 		subFont.drawString(currentUser, ofGetWidth() / 2 - subFont.stringWidth(currentUser) / 2, 150);
 		backIMG.draw(backBTN);
 		ofDrawRectangle(searchBTN);
+		upIMG.draw(scrollUpBTN);
+		downIMG.draw(scrollDownBTN);
 
 		if (searchInput.empty()) {
 			ofSetColor(150);
@@ -193,6 +200,13 @@ void ofApp::draw() {
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
 		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
+
+		glEnable(GL_SCISSOR_TEST); // chatgpt was used to generate the code with the prompt: how to stop rendering areas in open frameworks
+		glScissor(0, 0, ofGetWidth(), ofGetHeight() - 250);  
+
+		ofPushMatrix();
+		ofTranslate(0, -scrollOffset); // apply scroll 
+
 		if (searchIndex != -1 && user[searchIndex] == currentUser) { // checks whether the user has tried to search and if search matches the current user
 			// clear search button
 			ofSetColor(200, 50, 50); 
@@ -222,6 +236,7 @@ void ofApp::draw() {
 		// no search applied
 		else { 
 			int displayCount = 0;
+
 			for (int i = 0; i < service.size(); i++) {
 				if (user[i] != currentUser) continue;
 
@@ -298,6 +313,10 @@ void ofApp::draw() {
 				mainFont.drawString(newPasswordInput, passwordBTNNew.x + 10, passwordBTNNew.y + 30);
 			}
 		}
+
+		ofPopMatrix();  // end scroll
+		glDisable(GL_SCISSOR_TEST);
+
 		if (showingDeleteConfirmation) {
 			ofSetColor(0, 0, 0, 150); // semi-transparent dark overlay
 			ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
@@ -331,6 +350,8 @@ void ofApp::draw() {
 			ofSetColor(255);
 			mainFont.drawString("No", confirmDeleteNoBTN.x + 35, confirmDeleteNoBTN.y + 25);
 		}
+
+
 
 	}
 }
@@ -483,12 +504,23 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 	if (state == States::HOME) {
 
+		// logic for scrolling
+		if (scrollDownBTN.inside(x, y)) {
+			scrollOffset = max(0.0f, scrollOffset - scrollStep);
+		}
+		if (scrollUpBTN.inside(x, y)) {
+			maxScrollOffset = max(0.0f, (float)(service.size() * 130) - ofGetHeight());
+			scrollOffset = min(scrollOffset + scrollStep, maxScrollOffset);
+		}
+
+		int adjustedY = y + scrollOffset;  // Adjust y for scrolling content
 		int displayCount = 0;
+
 		for (int i = 0; i < service.size(); i++) {
 			if (user[i] != currentUser) continue;
 
 			ofRectangle deleteArea(passwordBox.x + 390, passwordBox.y + displayCount * 150 + 10, 25, 25);
-			if (deleteArea.inside(x, y)) {
+			if (deleteArea.inside(x, adjustedY)) {
 				showingDeleteConfirmation = true;
 				deleteCandidateIndex = i;
 				return;
@@ -523,7 +555,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 				}
 			}
 			ofRectangle eyeArea(passwordBox.x + 350, passwordBox.y + displayCount * 150 + 55, 35, 35);
-			if (eyeArea.inside(x, y)) {
+			if (eyeArea.inside(x, adjustedY)) {
 				hidePasswordList[i] = !hidePasswordList[i];
 				break;
 			}

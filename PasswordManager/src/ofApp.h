@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include <vector>
+#include <algorithm>
 
 class ofApp : public ofBaseApp {
 
@@ -17,7 +18,7 @@ public:
 	void readUsers();
 
 	// Buttons and UI elements
-	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN;
+	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN, scrollUpBTN, scrollDownBTN;
 
 	// Fonts
 	ofTrueTypeFont headFont, mainFont, subFont;
@@ -38,7 +39,7 @@ public:
 	vector<bool> hidePasswordList;
 
 	// image objects
-	ofImage backIMG, eyeIMG, deleteIMG, addIMG;
+	ofImage backIMG, eyeIMG, deleteIMG, addIMG, upIMG, downIMG;
 
 	string usernameInput;
 	string passwordInput;
@@ -62,6 +63,9 @@ public:
 	bool typingNewPassword = false;
 	int maxWordCount = 12;
 	int searchIndex = -1; // -1 means no search applied
+	float scrollOffset = 0.0f;
+	float scrollStep = 40.0f; // amount to scroll 
+	float maxScrollOffset = 0.0f; // how far you can scroll
 
 	// Function to check if the password is valid
 	string isValidPassword(const string& password);
