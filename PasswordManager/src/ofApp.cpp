@@ -411,6 +411,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 		if (homeBTN.inside(x, y)) { // only temporary needs to be deleted before release
 			currentUser = "ted";
 			state = States::HOME;
+			readPasswords();
 			clearInput();
 			return;
 		}
@@ -428,6 +429,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			if (validLogin) {
 				currentUser = usernameInput;
 				state = States::HOME;
+				readPasswords();
 				clearInput();
 			}
 			else {
@@ -462,6 +464,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 					masterPassword.push_back(passwordInput);
 					currentUser = usernameInput;
 					state = States::HOME;
+					readPasswords();
 					createAccountErrorMsg.clear();
 					clearInput();
 					return;
@@ -490,6 +493,16 @@ void ofApp::mousePressed(int x, int y, int button) {
 						password.erase(password.begin() + deleteCandidateIndex);
 						service.erase(service.begin() + deleteCandidateIndex);
 						hidePasswordList.erase(hidePasswordList.begin() + deleteCandidateIndex);
+						ofstream passwordFile("Passwords.csv");
+						if (passwordFile.is_open()) {
+							for (int j = 0; j < service.size(); j++) { 
+								passwordFile << user[j] << "," << service[j] << "," << username[j] << "," << password[j] << '\n'; //rewrites the passwords file but without the newly deleted password 
+							}
+							passwordFile.close();
+						}
+						else {
+							cout << "Error: failed to access password file." << endl;
+						}
 					}
 					showingDeleteConfirmation = false;
 					deleteCandidateIndex = -1;
@@ -561,6 +574,14 @@ void ofApp::mousePressed(int x, int y, int button) {
 			username.push_back(newUsernameInput);
 			password.push_back(newPasswordInput);
 			hidePasswordList.push_back(true);
+			ofstream outPasswordFile("Passwords.csv", ios::app);
+			if (outPasswordFile.is_open()) {
+				outPasswordFile << currentUser << "," << newServiceInput << "," << newUsernameInput << "," << newPasswordInput << '\n';
+				outPasswordFile.close();
+			}
+			else {
+				cout << "Error: failed to access password file." << endl;
+			}
 			addingNewEntry = false;   
 			newServiceInput.clear();
 			newUsernameInput.clear();
@@ -639,9 +660,10 @@ void ofApp::search() {
 
 	searchInput.clear();  // Clear search either way
 }
-//--------------------------------------------------------------
 
+//--------------------------------------------------------------
 // isValidPassword: Validates the password based on length and character requirements
+//--------------------------------------------------------------
 string ofApp::isValidPassword(const string& password) {
 	if (password.length() < 6) return "Password is too short (min 6 characters).";
 	if (password.length() > 12) return "Password is too long (max 12 characters).";
@@ -660,3 +682,31 @@ string ofApp::isValidPassword(const string& password) {
 	return ""; // Empty string means it's valid
 }
 
+//--------------------------------------------------------------
+// readPasswords: Reads from the passwords file 
+//--------------------------------------------------------------
+void ofApp::readPasswords() {
+	user.clear();
+	service.clear();
+	username.clear();			//needs to clear the vectors to prevent filling them with duplicate data
+	password.clear();
+	ifstream inPasswordFile("Passwords.csv");
+	if (inPasswordFile.is_open()) {
+		string line, readUser, readService, readUsername, readPassword;
+		while (getline(inPasswordFile, line)) {
+			stringstream stream(line);
+			getline(stream, readUser, ',');
+			user.push_back(readUser);
+			getline(stream, readService, ',');
+			service.push_back(readService);
+			getline(stream, readUsername, ',');
+			username.push_back(readUsername);
+			getline(stream, readPassword, ',');
+			password.push_back(readPassword);
+			hidePasswordList.push_back(true);
+		}
+	}
+	else {
+		cout << "Error: failed to access password file." << endl;
+	}
+};

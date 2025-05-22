@@ -13,6 +13,7 @@ public:
 	void mousePressed(int x, int y, int button);
 	void clearInput();
 	void search();
+	void readPasswords();
 
 	// Buttons and UI elements
 	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN;
@@ -29,10 +30,10 @@ public:
 	vector<string> masterPassword = { "det", "kcaj", "kcaz", "yippee"};
 
 	// vectors to store password entry data
-	vector<string> user = { "ted", "jack", "jack", "rj"};
-	vector<string> service = {"apple", "apple", "amazon", "netflix"};
-	vector<string> username = {"sadasd", "sadhbgaj", "tuwvr", "comp21"};
-	vector<string> password = {"bdfsbk", "asdabsdbk", "ugsdb", "nooooo"};
+	vector<string> user = {};
+	vector<string> service = {};
+	vector<string> username = {};
+	vector<string> password = {};
 	vector<bool> hidePasswordList;
 
 	// image objects
