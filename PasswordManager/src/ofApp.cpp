@@ -106,8 +106,8 @@ void ofApp::draw() {
 
 	if (state == States::LOGIN or state == States::CREATE) { // if its either login or create screen
 		ofSetColor(65, 87, 103);
-		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
-		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
+		ofDrawRectRounded(createBTN.x - 48, createBTN.y, createBTN.width + 90, createBTN.height, 20);
+		ofDrawRectRounded(loginBTN.x - 48, loginBTN.y, loginBTN.width + 90, loginBTN.height, 20);
 		ofSetColor(225);
 		ofDrawRectRounded(usernameBTN.x, usernameBTN.y, usernameBTN.width, usernameBTN.height, 20);
 		ofDrawRectRounded(enterPasswordBTN.x, enterPasswordBTN.y, enterPasswordBTN.width, enterPasswordBTN.height, 20);
@@ -147,10 +147,10 @@ void ofApp::draw() {
 		ofSetColor(255);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 100);	
 		ofNoFill();
-		ofDrawRectRounded(450, 60, 125, 60, 20);
+		ofDrawRectRounded(580, 60, 125, 60, 20);
 		ofFill();
-		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 635);
-		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
+		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 605);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 685);
 	}
 
 	// Draw Create Screen
