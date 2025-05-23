@@ -19,15 +19,16 @@ void ofApp::setup() {
 	addIMG.load("add.png");
 	upIMG.load("up.png");
 	downIMG.load("down.png");
+	logoIMG.load("LockR-Logo.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
 	usernameBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 200, ofGetWidth() - 200, 50);
 	enterPasswordBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 350, ofGetWidth() - 200, 50);
 	reEnterPasswordBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
-	createBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 400) / 2, 600, ofGetWidth() - 400, 50);
-	loginBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 300) / 2, 700, ofGetWidth() - 300, 50);
-	homeBTN.set(ofGetWidth() / 2 - 100, 400, 200, 50);
+	createBTN.set(ofGetWidth() / 2 - 128, 650, 260, 50);
+	loginBTN.set(ofGetWidth() / 2 - 128, 570, 260, 50);
+	homeBTN.set(ofGetWidth() / 2 - 128, 500, 260, 50);
 	backBTN.set(15, 25, 50, 50);
 	hidePasswordBTN.set(enterPasswordBTN.x + enterPasswordBTN.width + 10, enterPasswordBTN.y, 50, enterPasswordBTN.height);
 	searchBTN.set(200, 200, ofGetWidth() - 400, 50);
@@ -60,7 +61,7 @@ void ofApp::draw() {
 
 	// Draw Exit Button
 	ofSetColor(65, 87, 103); // sets colour of following object(s)
-	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 20); // Draw button based on values set in setup
+	ofDrawRectRounded(exitBTN.x, exitBTN.y, exitBTN.width, exitBTN.height, 10); // Draw button based on values set in setup
 	//Draw Exit button outline
 	ofNoFill(); // Disable fill colour (outline only)
 	ofSetColor(255);
@@ -88,16 +89,19 @@ void ofApp::draw() {
 		ofFill();
 
 		// Draw Menu Button text
-		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 635);
-		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 735);
-		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 435);
+		headFont.drawString("Create Account", ofGetWidth() / 2 - headFont.stringWidth("Create Account") / 2, createBTN.y + 35);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, loginBTN.y + 35);
+		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, homeBTN.y + 35);
 
 		// Draw LockR Title
 		ofNoFill(); 
 		ofSetColor(255); 
-		ofDrawRectRounded(250, 50, 520, 80, 20);
+		ofDrawRectRounded(380, 10, 520, 80, 20);
 		ofFill();
-		headFont.drawString("LockR: Password Manager", ofGetWidth() / 2 - headFont.stringWidth("LockR: Password Manager") / 2, 100);
+		headFont.drawString("LockR: Password Manager", ofGetWidth() / 2 - headFont.stringWidth("LockR: Password Manager") / 2, 60);
+
+		// Draw LockR Logo
+		logoIMG.draw((ofGetWidth() / 2) - 150, 130, 300, 300);
 	}
 
 	if (state == States::LOGIN or state == States::CREATE) { // if its either login or create screen
@@ -199,7 +203,7 @@ void ofApp::draw() {
 			ofSetColor(0);
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
-		addIMG.draw(searchBTN.x + 650, searchBTN.y, 50, 50);
+		addIMG.draw(searchBTN.x + 680, searchBTN.y, 50, 50);
 
 		glEnable(GL_SCISSOR_TEST); // chatgpt was used to generate the code with the prompt: how to stop rendering areas in open frameworks
 		glScissor(0, 0, ofGetWidth(), ofGetHeight() - 250);  
