@@ -39,7 +39,7 @@ public:
 	vector<bool> hidePasswordList;
 
 	// image objects
-	ofImage backIMG, eyeIMG, deleteIMG, addIMG, upIMG, downIMG;
+	ofImage backIMG, eyeIMG, deleteIMG, addIMG, upIMG, downIMG, logoIMG;
 
 	string usernameInput;
 	string passwordInput;
