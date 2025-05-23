@@ -203,7 +203,7 @@ void ofApp::draw() {
 			ofSetColor(0);
 			mainFont.drawString(searchInput, searchBTN.x + 10, searchBTN.y + 30);
 		}
-		addIMG.draw(searchBTN.x + 680, searchBTN.y, 50, 50);
+		addIMG.draw(searchBTN.x + 820, searchBTN.y, 50, 50);
 
 		glEnable(GL_SCISSOR_TEST); // chatgpt was used to generate the code with the prompt: how to stop rendering areas in open frameworks
 		glScissor(0, 0, ofGetWidth(), ofGetHeight() - 250);  
@@ -221,8 +221,8 @@ void ofApp::draw() {
 			int i = searchIndex;
 			ofSetColor(225);
 			ofDrawRectangle(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height);
-			eyeIMG.draw(passwordBox.x + 350, passwordBox.y + 55, 35, 35);
-			deleteIMG.draw(passwordBox.x + 390, passwordBox.y + 10, 25, 25);
+			eyeIMG.draw(passwordBox.x + 630, passwordBox.y + 55, 35, 35);
+			deleteIMG.draw(passwordBox.x + 635, passwordBox.y + 10, 25, 25);
 			ofSetColor(225);
 			subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y - 20);  // fixed position
 			ofSetColor(50);
@@ -246,8 +246,8 @@ void ofApp::draw() {
 
 				ofSetColor(225);
 				ofDrawRectangle(passwordBox.x, passwordBox.y + displayCount * 150, passwordBox.width, passwordBox.height);
-				eyeIMG.draw(passwordBox.x + 350, passwordBox.y + displayCount * 150 + 55, 35, 35);
-				deleteIMG.draw(passwordBox.x + 390, passwordBox.y + displayCount * 150 + 10, 25, 25);
+				eyeIMG.draw(passwordBox.x + 630, passwordBox.y + displayCount * 150 + 55, 35, 35);
+				deleteIMG.draw(passwordBox.x + 635, passwordBox.y + displayCount * 150 + 10, 25, 25);
 
 				ofSetColor(225);
 				subFont.drawString(service[i], passwordBox.x + 10, passwordBox.y + (displayCount * 150) - 20);
