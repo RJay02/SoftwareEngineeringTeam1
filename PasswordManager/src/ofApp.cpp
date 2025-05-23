@@ -161,7 +161,7 @@ void ofApp::draw() {
 		headFont.drawString("Create account", ofGetWidth() / 2 - headFont.stringWidth("Create account") / 2, 635);
 		headFont.drawString("Already have an account?", ofGetWidth() / 2 - headFont.stringWidth("Already have an account?") / 2, 735);
 		ofSetColor(225);
-		ofDrawRectangle(reEnterPasswordBTN);
+		ofDrawRectRounded(reEnterPasswordBTN, 20);
 
 		if (!createAccountErrorMsg.empty()) {
 			ofSetColor(255, 0, 0); // red for error
@@ -191,7 +191,7 @@ void ofApp::draw() {
 		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, 100);
 		subFont.drawString(currentUser, ofGetWidth() / 2 - subFont.stringWidth(currentUser) / 2, 150);
 		backIMG.draw(backBTN);
-		ofDrawRectangle(searchBTN);
+		ofDrawRectRounded(searchBTN, 20);
 		upIMG.draw(scrollUpBTN);
 		downIMG.draw(scrollDownBTN);
 
@@ -214,13 +214,13 @@ void ofApp::draw() {
 		if (searchIndex != -1 && user[searchIndex] == currentUser) { // checks whether the user has tried to search and if search matches the current user
 			// clear search button
 			ofSetColor(200, 50, 50); 
-			ofDrawRectangle(clearSearchBTN);
+			ofDrawRectRounded(clearSearchBTN, 20);
 			ofSetColor(255);
 			mainFont.drawString("Clear Search", clearSearchBTN.x + 10, clearSearchBTN.y + 25);
 
 			int i = searchIndex;
 			ofSetColor(225);
-			ofDrawRectangle(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height);
+			ofDrawRectRounded(passwordBox.x, passwordBox.y, passwordBox.width, passwordBox.height, 20);
 			eyeIMG.draw(passwordBox.x + 630, passwordBox.y + 55, 35, 35);
 			deleteIMG.draw(passwordBox.x + 635, passwordBox.y + 10, 25, 25);
 			ofSetColor(225);
@@ -245,7 +245,7 @@ void ofApp::draw() {
 				if (user[i] != currentUser) continue;
 
 				ofSetColor(225);
-				ofDrawRectangle(passwordBox.x, passwordBox.y + displayCount * 150, passwordBox.width, passwordBox.height);
+				ofDrawRectRounded(passwordBox.x, passwordBox.y + displayCount * 150, passwordBox.width, passwordBox.height, 20);
 				eyeIMG.draw(passwordBox.x + 630, passwordBox.y + displayCount * 150 + 55, 35, 35);
 				deleteIMG.draw(passwordBox.x + 635, passwordBox.y + displayCount * 150 + 10, 25, 25);
 
