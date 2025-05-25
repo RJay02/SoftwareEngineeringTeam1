@@ -149,19 +149,19 @@ void ofApp::draw() {
 		ofNoFill();
 		ofDrawRectRounded(580, 60, 125, 60, 20);
 		ofFill();
-		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 605);
-		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 685);
+		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, 605);
+		headFont.drawString("Don't have an account?", ofGetWidth() / 2 - headFont.stringWidth("Don't have an account?") / 2, 685);
 	}
-
+	
 	// Draw Create Screen
 	if (state == States::CREATE) {
 		ofSetColor(50);
 		headFont.drawString("Create", ofGetWidth() / 2 - headFont.stringWidth("Create") / 2, 100);
 		ofSetColor(255);
-		headFont.drawString("Create account", ofGetWidth() / 2 - headFont.stringWidth("Create account") / 2, 635);
-		headFont.drawString("Already have an account?", ofGetWidth() / 2 - headFont.stringWidth("Already have an account?") / 2, 735);
+		headFont.drawString("Already have an account ?", ofGetWidth() / 2 - headFont.stringWidth("Already have an account ?") / 2, 605);
+		headFont.drawString("Create account", ofGetWidth() / 2 - headFont.stringWidth("Create account") / 2, 685);
 		ofSetColor(225);
-		ofDrawRectRounded(reEnterPasswordBTN, 20);
+		ofDrawRectRounded(reEnterPasswordBTN, 20); 
 
 		if (!createAccountErrorMsg.empty()) {
 			ofSetColor(255, 0, 0); // red for error
@@ -192,8 +192,7 @@ void ofApp::draw() {
 		subFont.drawString(currentUser, ofGetWidth() / 2 - subFont.stringWidth(currentUser) / 2, 150);
 		backIMG.draw(backBTN);
 		ofDrawRectRounded(searchBTN, 20);
-		upIMG.draw(scrollUpBTN);
-		downIMG.draw(scrollDownBTN);
+		
 
 		if (searchInput.empty()) {
 			ofSetColor(150);
@@ -239,6 +238,9 @@ void ofApp::draw() {
 		}
 		// no search applied
 		else { 
+			ofSetColor(255);
+			upIMG.draw(scrollUpBTN);
+			downIMG.draw(scrollDownBTN);
 			int displayCount = 0;
 
 			for (int i = 0; i < service.size(); i++) {
@@ -269,6 +271,8 @@ void ofApp::draw() {
 		}
 
 		if (addingNewEntry) {
+			ofSetColor(0, 0, 0, 150); // semi-transparent dark overlay
+			ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 			ofSetColor(200);
 			ofDrawRectangle(serviceBTN.x - 10, serviceBTN.y - 30, serviceBTN.width + 20, (passwordBTNNew.y + passwordBTNNew.height) - (serviceBTN.y - 30) + 10);
 			ofSetColor(180, 50, 50);  
@@ -443,7 +447,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 
 	if (state == States::LOGIN) {
-		if (loginBTN.inside(x, y)) {
+		if (loginBTN.inside(x - 48, y)) {
 			validLogin = false;
 			for (int i = 0; i < masterUsername.size(); i++) {
 				if (usernameInput == masterUsername[i] && passwordInput == masterPassword[i]) {
@@ -462,7 +466,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			}
 			return;
 		}
-		if (createBTN.inside(x, y)) {
+		if (createBTN.inside(x - 48, y)) {
 			state = States::CREATE;
 			clearInput();
 			return;
@@ -567,7 +571,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 			displayCount++;
 		}
 
-		ofRectangle addArea(searchBTN.x + 650, searchBTN.y, 50, 50);
+		ofRectangle addArea(searchBTN.x + 820, searchBTN.y, 50, 50);
 		if (addArea.inside(x, y) && state == States::HOME) {
 			addingNewEntry = true; // new boolean flag
 			clearInput();
