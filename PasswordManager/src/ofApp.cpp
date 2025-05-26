@@ -28,7 +28,6 @@ void ofApp::setup() {
 	reEnterPasswordBTN.set(ofGetWidth() / 2 - (ofGetWidth() - 200) / 2, 500, ofGetWidth() - 200, 50);
 	createBTN.set(ofGetWidth() / 2 - 128, 650, 260, 50);
 	loginBTN.set(ofGetWidth() / 2 - 128, 570, 260, 50);
-	homeBTN.set(ofGetWidth() / 2 - 128, 500, 260, 50);
 	backBTN.set(15, 25, 50, 50);
 	hidePasswordBTN.set(enterPasswordBTN.x + enterPasswordBTN.width + 10, enterPasswordBTN.y, 50, enterPasswordBTN.height);
 	searchBTN.set(200, 200, ofGetWidth() - 400, 50);
@@ -77,7 +76,6 @@ void ofApp::draw() {
 		ofSetColor(65, 87, 103);
 		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20);
 		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20);
-		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20);
 
 		// Draw Menu Button Outlines
 		ofNoFill(); // Disable fill colour (outline only)
@@ -85,13 +83,11 @@ void ofApp::draw() {
 		ofSetLineWidth(3);  // border thickness
 		ofDrawRectRounded(createBTN.x, createBTN.y, createBTN.width, createBTN.height, 20); // Create outline
 		ofDrawRectRounded(loginBTN.x, loginBTN.y, loginBTN.width, loginBTN.height, 20); // Login outline
-		ofDrawRectRounded(homeBTN.x, homeBTN.y, homeBTN.width, homeBTN.height, 20); // Home outline
 		ofFill();
 
 		// Draw Menu Button text
 		headFont.drawString("Create Account", ofGetWidth() / 2 - headFont.stringWidth("Create Account") / 2, createBTN.y + 35);
 		headFont.drawString("Login", ofGetWidth() / 2 - headFont.stringWidth("Login") / 2, loginBTN.y + 35);
-		headFont.drawString("Home", ofGetWidth() / 2 - headFont.stringWidth("Home") / 2, homeBTN.y + 35);
 
 		// Draw LockR Title
 		ofNoFill(); 
@@ -434,13 +430,6 @@ void ofApp::mousePressed(int x, int y, int button) {
 		}
 		if (loginBTN.inside(x, y)) {
 			state = States::LOGIN;
-			clearInput();
-			return;
-		}
-		if (homeBTN.inside(x, y)) { // only temporary needs to be deleted before release
-			currentUser = "ted";
-			state = States::HOME;
-			readPasswords();
 			clearInput();
 			return;
 		}

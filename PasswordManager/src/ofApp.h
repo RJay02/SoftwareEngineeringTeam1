@@ -18,7 +18,7 @@ public:
 	void readUsers();
 
 	// Buttons and UI elements
-	ofRectangle createBTN, loginBTN, homeBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN, scrollUpBTN, scrollDownBTN;
+	ofRectangle createBTN, loginBTN, menuBTN, usernameBTN, enterPasswordBTN, reEnterPasswordBTN, exitBTN, backBTN, hidePasswordBTN, searchBTN, passwordBox, clearSearchBTN, serviceBTN, usernameBTNNew, passwordBTNNew, cancelNewEntryBTN, confirmNewEntryBTN, scrollUpBTN, scrollDownBTN;
 
 	// Fonts
 	ofTrueTypeFont headFont, mainFont, subFont;
