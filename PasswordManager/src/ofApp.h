@@ -61,7 +61,7 @@ public:
 	bool typingService = false;
 	bool typingNewUsername = false;
 	bool typingNewPassword = false;
-	int maxWordCount = 12;
+	int maxWordCount = 99;
 	int searchIndex = -1; // -1 means no search applied
 	float scrollOffset = 0.0f;
 	float scrollStep = 40.0f; // amount to scroll 

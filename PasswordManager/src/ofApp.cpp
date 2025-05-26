@@ -19,7 +19,7 @@ void ofApp::setup() {
 	addIMG.load("add.png");
 	upIMG.load("up.png");
 	downIMG.load("down.png");
-	logoIMG.load("LockR-Logo.png");
+	logoIMG.load("LockR-Logo-transparent.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
@@ -713,8 +713,7 @@ void ofApp::search() {
 // isValidPassword: Validates the password based on length and character requirements
 //--------------------------------------------------------------
 string ofApp::isValidPassword(const string& password) {
-	if (password.length() < 6) return "Password is too short (min 6 characters).";
-	if (password.length() > 12) return "Password is too long (max 12 characters).";
+	if (password.length() < 12) return "Password is too short (min 12 characters).";
 
 	bool hasUpper = false;
 	bool hasDigit = false;
