@@ -19,7 +19,7 @@ void ofApp::setup() {
 	addIMG.load("add.png");
 	upIMG.load("up.png");
 	downIMG.load("down.png");
-	logoIMG.load("LockR-Logo.png");
+	logoIMG.load("LockR-Logo-transparent.png");
 
 	// set coordinates for buttons
 	exitBTN.set(ofGetWidth() - 75, 25, 50, 50);
